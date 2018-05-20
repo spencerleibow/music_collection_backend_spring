@@ -15,7 +15,7 @@ public class GetArtistListController {
 	@Autowired
 	private ArtistService artistService;
 	
-	@RequestMapping("/getArtistList")
+	@RequestMapping(value="/getArtistList", produces={"application/json", "application/xml"})
 	public List<Artist> getList() {
 		return artistService.getArtistList();
 	}
