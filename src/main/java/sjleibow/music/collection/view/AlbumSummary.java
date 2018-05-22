@@ -1,31 +1,46 @@
 package sjleibow.music.collection.view;
 
 import sjleibow.music.collection.model.Album;
-import sjleibow.music.collection.model.Artist;
 
 public class AlbumSummary {
 
-	private Album album;
-	private Artist artist;
+	private int id;
+	private String name;
+	private short year;
+	private int artistId;
+	private String artistName;
 	
-	public Album getAlbum() {
-		return album;
+	public AlbumSummary(Album album) {
+		this.id = album.getId();
+		this.name = album.getName();
+		this.year = album.getYear();
+		this.artistId = album.getArtist().getId();
+		this.artistName = album.getArtist().getName();
 	}
 
-	public void setAlbum(Album album) {
-		this.album = album;
+	public int getId() {
+		return id;
 	}
 
-	public Artist getArtist() {
-		return artist;
+	public String getName() {
+		return name;
 	}
 
-	public void setArtist(Artist artist) {
-		this.artist = artist;
+	public short getYear() {
+		return year;
+	}
+
+	public int getArtistId() {
+		return artistId;
+	}
+
+	public String getArtistName() {
+		return artistName;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("((%s) (%s))", album, artist);
+		return "AlbumSummary [id=" + id + ", name=" + name + ", year=" + year + ", artistId=" + artistId
+				+ ", artistName=" + artistName + "]";
 	}
 }

@@ -1,5 +1,6 @@
 package sjleibow.music.collection.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -18,15 +19,10 @@ public class AlbumService {
 	@Autowired
 	private AlbumDAO albumDAO;
 	
-	public Album getAlbum(int id) {
-		return albumDAO.getAlbum(id);
-	}
-	
-	public List<Album> getAlbumList() {
-		return albumDAO.getAlbumList();
-	}
-	
 	public List<AlbumSummary> getAlbumSummaryList() {
-		return albumDAO.getAlbumSummaryList();
+		List<Album> albumList = albumDAO.getAlbumList();		
+		List<AlbumSummary> albumSummary = new ArrayList<>(albumList.size());
+		albumList.forEach(album -> albumSummary.add(new AlbumSummary(album)));
+		return albumSummary;
 	}
 }
