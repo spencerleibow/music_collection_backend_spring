@@ -14,8 +14,9 @@ import sjleibow.music.collection.model.Artist;
 @Repository
 public class ArtistDAO {
 	
-	private static final String ARTIST_SQL = "SELECT id, name FROM artist where id = ?";
-	private static final String ARTIST_LIST_SQL = "SELECT id, name FROM artist";
+	private static final String SELECT_ARTIST_SQL = "SELECT id, name FROM artist where id = ?";
+	private static final String SELECT_ARTIST_LIST_SQL = "SELECT id, name FROM artist ORDER BY name";
+	private static final String INSERT_ARTIST_SQL = "INSERT INTO artist (name) VALUES (?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -26,13 +27,17 @@ public class ArtistDAO {
 	
 	public Artist getArtist(int id) {
 		try {
-			return jdbcTemplate.queryForObject(ARTIST_SQL, new BeanPropertyRowMapper<Artist>(Artist.class), id);
+			return jdbcTemplate.queryForObject(SELECT_ARTIST_SQL, new BeanPropertyRowMapper<Artist>(Artist.class), id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new RecordNotFoundException("artist", id);
 		}
 	}
 	
 	public List<Artist> getArtistList() {
-		return jdbcTemplate.query(ARTIST_LIST_SQL, new BeanPropertyRowMapper<Artist>(Artist.class));
-	}	
+		return jdbcTemplate.query(SELECT_ARTIST_LIST_SQL, new BeanPropertyRowMapper<Artist>(Artist.class));
+	}
+	
+	public void addArtist(Artist artist) {
+		jdbcTemplate.update(INSERT_ARTIST_SQL, artist.getName());
+	}
 }

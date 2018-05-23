@@ -23,6 +23,7 @@ public class AlbumDAO {
 	private static final String SQL_ALBUM = SQL_SELECT + " WHERE a.id = ?";	
 	private static final String SQL_ALL_ALBUMS = SQL_SELECT + " ORDER BY albumName";
 	private static final String SQL_ALBUMS_BY_ARTIST = SQL_SELECT + " WHERE b.id = ? ORDER BY albumYear";
+	private static final String INSERT_ALBUM_SQL = "INSERT INTO album (artist_id, name, year) VALUES (?,?,?)";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -41,6 +42,11 @@ public class AlbumDAO {
 	
 	public List<Album> getAlbumListByArtist(int artistId) {
 		return jdbcTemplate.query(SQL_ALBUMS_BY_ARTIST, new AlbumRowMapper(), artistId);
+	}
+	
+	public void addAlbum(Album album) {
+		jdbcTemplate.update(INSERT_ALBUM_SQL,
+				album.getArtist().getId(), album.getName(), album.getYear());
 	}
 	
 	private static class AlbumRowMapper implements RowMapper<Album> {

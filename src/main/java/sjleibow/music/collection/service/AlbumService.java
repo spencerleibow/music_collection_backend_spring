@@ -25,4 +25,8 @@ public class AlbumService {
 		albumList.forEach(album -> albumSummary.add(new AlbumSummary(album)));
 		return albumSummary;
 	}
+	
+	public void addAlbum(Album album) {
+		albumDAO.addAlbum(album);
+	}
 }

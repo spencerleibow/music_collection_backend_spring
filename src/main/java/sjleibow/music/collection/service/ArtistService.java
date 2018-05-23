@@ -37,4 +37,8 @@ public class ArtistService {
 		List<Album> albumList = albumDAO.getAlbumListByArtist(id);
 		return new ArtistDetail(artist, albumList);
 	}
+	
+	public void addArtist(Artist artist) {
+		artistDAO.addArtist(artist);
+	}
 }
