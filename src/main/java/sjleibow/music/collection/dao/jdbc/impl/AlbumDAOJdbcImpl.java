@@ -1,19 +1,22 @@
-package sjleibow.music.collection.dao;
+package sjleibow.music.collection.dao.jdbc.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import sjleibow.music.collection.model.Album;
-import sjleibow.music.collection.model.Artist;
+import sjleibow.music.collection.dao.AlbumDAO;
+import sjleibow.music.collection.entity.Album;
+import sjleibow.music.collection.entity.Artist;
+import sjleibow.music.collection.exception.ResourceNotFoundException;
 
 @Repository
-public class AlbumDAO {
+public class AlbumDAOJdbcImpl implements AlbumDAO {
 	
 	
 	private static final String SQL_SELECT = "SELECT a.id albumId, a.name albumName, a.year albumYear, b.id artistId, b.name artistName"
@@ -28,22 +31,30 @@ public class AlbumDAO {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public AlbumDAO(JdbcTemplate jdbcTemplate) {
+	public AlbumDAOJdbcImpl(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 	
+	@Override
 	public Album getAlbum(int id) {
-		return jdbcTemplate.queryForObject(SQL_ALBUM, new AlbumRowMapper(), id);
+		try {
+			return jdbcTemplate.queryForObject(SQL_ALBUM, new AlbumRowMapper(), id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("album", id);
+		}
 	}
 
+	@Override
 	public List<Album> getAlbumList() {
 		return jdbcTemplate.query(SQL_ALL_ALBUMS, new AlbumRowMapper());
 	}
 	
+	@Override
 	public List<Album> getAlbumListByArtist(int artistId) {
 		return jdbcTemplate.query(SQL_ALBUMS_BY_ARTIST, new AlbumRowMapper(), artistId);
 	}
 	
+	@Override
 	public void addAlbum(Album album) {
 		jdbcTemplate.update(INSERT_ALBUM_SQL,
 				album.getArtist().getId(), album.getName(), album.getYear());

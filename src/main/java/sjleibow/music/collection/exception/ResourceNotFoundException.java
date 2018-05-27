@@ -1,15 +1,16 @@
 package sjleibow.music.collection.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
 @SuppressWarnings("serial")
-public class RecordNotFoundException extends ApiException {
+public class ResourceNotFoundException extends ApiException {
 
 	private String resource;
 	private int id;
 	
-	public RecordNotFoundException(String resource, int id) {
-		super(HttpStatus.NOT_FOUND);
+	public ResourceNotFoundException(String resource, int id) {
 		this.resource = resource;
 		this.id = id;
 	}
