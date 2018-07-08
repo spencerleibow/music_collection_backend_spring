@@ -1,4 +1,4 @@
-package sjleibow.music.collection.service.impl.dao;
+package sjleibow.music.collection.service.impl.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,29 +6,32 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import sjleibow.music.collection.dao.AlbumDAO;
 import sjleibow.music.collection.entity.Album;
+import sjleibow.music.collection.exception.ResourceNotFoundException;
+import sjleibow.music.collection.repository.AlbumRepository;
 import sjleibow.music.collection.service.AlbumService;
 import sjleibow.music.collection.view.AlbumDetail;
 import sjleibow.music.collection.view.AlbumSummary;
 
 @Transactional
-@Service("AlbumServiceDAOImpl")
-public class AlbumServiceDAOImpl implements AlbumService {
-	
+@Service("AlbumServiceJPAImpl")
+public class AlbumServiceJPAImpl implements AlbumService {
+
 	@Autowired
-	private AlbumDAO albumDAO;
+	private AlbumRepository albumRepository;
 
 	@Override
 	public AlbumDetail getAlbum(int id) {
-		return new AlbumDetail(albumDAO.getAlbum(id));
+		Album album = albumRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("artist", id));
+		return new AlbumDetail(album);
 	}
 
 	@Override
 	public List<AlbumSummary> getAlbumList() {
-		List<Album> albumList = albumDAO.getAlbumList();
+		List<Album> albumList = albumRepository.findAll(Sort.by("name"));
 		List<AlbumSummary> summaryList = new ArrayList<>(albumList.size());
 		albumList.forEach(album -> summaryList.add(new AlbumSummary(album, true)));
 		return summaryList;
@@ -36,16 +39,17 @@ public class AlbumServiceDAOImpl implements AlbumService {
 
 	@Override
 	public void addAlbum(Album album) {
-		albumDAO.addAlbum(album);
+		albumRepository.save(album);
+		
 	}
 
 	@Override
 	public void updateAlbum(Album album) {
-		albumDAO.updateAlbum(album);
+		albumRepository.save(album);
 	}
 
 	@Override
 	public void deleteAlbum(int id) {
-		albumDAO.deleteAlbum(id);
+		albumRepository.deleteById(id);
 	}
 }

@@ -13,6 +13,8 @@ import sjleibow.music.collection.entity.Artist;
 @Entity
 @Table(name="album")
 public class Album {
+	
+	public static final String RESOURCE_NAME = "Album";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

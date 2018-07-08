@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -27,6 +27,9 @@ public class AlbumDAOJdbcImpl implements AlbumDAO {
 	private static final String SQL_ALL_ALBUMS = SQL_SELECT + " ORDER BY albumName";
 	private static final String SQL_ALBUMS_BY_ARTIST = SQL_SELECT + " WHERE b.id = ? ORDER BY albumYear";
 	private static final String INSERT_ALBUM_SQL = "INSERT INTO album (artist_id, name, year) VALUES (?,?,?)";
+	private static final String UPDATE_ALBUM_SQL = "UPDATE album SET name = ?, year = ? WHERE id = ?";
+	private static final String DELETE_ALBUM_SQL = "DELETE FROM album WHERE id = ?";
+	private static final String DELETE_ALBUMS_BY_ARTIST_SQL = "DELETE FROM album WHERE artist_id = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -76,5 +79,20 @@ public class AlbumDAOJdbcImpl implements AlbumDAO {
 
 			return album;
 		}
+	}
+
+	@Override
+	public void updateAlbum(Album album) {
+		jdbcTemplate.update(UPDATE_ALBUM_SQL, album.getName(), album.getYear(), album.getId());	
+	}
+
+	@Override
+	public void deleteAlbum(int id) {
+		jdbcTemplate.update(DELETE_ALBUM_SQL, id);
+	}
+
+	@Override
+	public void deleteAlbumsByArtist(int artistId) {
+		jdbcTemplate.update(DELETE_ALBUMS_BY_ARTIST_SQL, artistId);
 	}
 }

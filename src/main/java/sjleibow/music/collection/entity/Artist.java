@@ -2,6 +2,7 @@ package sjleibow.music.collection.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,14 +16,19 @@ import javax.persistence.Table;
 @Table(name="artist")
 public class Artist {
 	
+	public static final String RESOURCE_NAME = "Artist";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
 	private String name;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "artist")
-	@OrderBy("year ASC")
+	@OneToMany(
+			fetch = FetchType.LAZY,
+			mappedBy = "artist",
+			cascade = CascadeType.REMOVE)
+	@OrderBy("year ASC")	
 	private List<Album> albumList;
 
 	public int getId() {

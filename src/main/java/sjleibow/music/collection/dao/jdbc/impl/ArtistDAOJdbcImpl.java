@@ -18,7 +18,9 @@ public class ArtistDAOJdbcImpl implements ArtistDAO {
 	private static final String SELECT_ARTIST_SQL = "SELECT id, name FROM artist where id = ?";
 	private static final String SELECT_ARTIST_LIST_SQL = "SELECT id, name FROM artist ORDER BY name";
 	private static final String INSERT_ARTIST_SQL = "INSERT INTO artist (name) VALUES (?)";
-
+	private static final String UPDATE_ARTIST_SQL = "UPDATE artist SET name = ? WHERE id = ?";
+	private static final String DELETE_ARTIST_SQL = "DELETE FROM artist WHERE id = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -43,5 +45,15 @@ public class ArtistDAOJdbcImpl implements ArtistDAO {
 	@Override
 	public void addArtist(Artist artist) {
 		jdbcTemplate.update(INSERT_ARTIST_SQL, artist.getName());
+	}
+
+	@Override
+	public void updateArtist(Artist artist) {
+		jdbcTemplate.update(UPDATE_ARTIST_SQL, artist.getName(), artist.getId());		
+	}
+
+	@Override
+	public void deleteArtist(int id) {
+		jdbcTemplate.update(DELETE_ARTIST_SQL, id);
 	}
 }
